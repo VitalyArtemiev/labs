@@ -1,0 +1,184 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    setlocale(LC_ALL, "Russian");
+    char input[256]; //входная строка
+    char s[256]; //стек
+    int x = 0; //флаг
+    cout << "Синтаксис условного выражения: \n{выражение0}_if_(условие)_then_{выражение1}_else_{выражение2}_{выражение3}.\n";
+    cout << "Выражение: ";
+    cin >> input;
+    cout << "ОПЗ: ";
+    int j = 0; //счетчик стека
+    int i = 0; //счетчик цикла
+    while(i < 256){
+        if(x == 1) //встретилась ли точка
+            break;
+        switch(input[i]){
+            case 'i':{ //перепрыгиваем "если"
+                i += 3;
+                break;
+            }
+            case 't':{ //перепрыгиваем "то"
+                i += 4;
+                cout << "'p2!"; //указатель на выражение 2
+                break;
+            }
+            case 'e':{ //перепрыгиваем "иначе"
+                cout << "p3#"; //указатель на выражение 3
+                i += 4;
+                break;
+            }
+            case '_':{//разделитель
+                while(j > 0){
+                    cout << s[j-1];
+                    j--;  s[j] = 0;
+                }
+                i++;
+                break;
+            }
+            case '+':{//обычные арифметические операции
+                if(j == 0){
+                    s[j] = input[i];
+                    j++;
+                }
+                else{
+                    while(s[j-1] == '^'){
+                        cout << s[j-1];
+                        j--;   s[j] = 0;
+                    }
+                    if((s[j-1] == '*') || (s[j-1] == '/')){
+                        cout << s[j-1];
+                        j--;  s[j] = 0;
+                    }
+                    if((s[j-1] == '-') || (s[j-1] == '+')){
+                        cout << s[j-1];
+                        j--;   s[j] = 0;
+                    }
+                    s[j] = input[i];
+                    j++;
+                }
+                i++;
+                break;
+            }
+            case '-':{
+                if(j == 0){
+                    s[j] = input[i];
+                    j++;
+                }
+                else{
+                    while(s[j-1] == '^'){
+                        cout << s[j-1];
+                        j--;   s[j] = 0;
+                    }
+                    if((s[j-1] == '*') || (s[j-1] == '/')){
+                        cout << s[j-1];
+                        j--;  s[j] = 0;
+                    }
+                    if((s[j-1] == '-') || (s[j-1] == '+')){
+                        cout << s[j-1];
+                        j--;  s[j] = 0;
+                    }
+                    s[j] = input[i];
+                    j++;
+                }
+                i++;
+                break;
+            }
+            case '*':{
+                if(j == 0){
+                    s[j] = input[i];
+                    j++;
+                }
+                else{
+                    while(s[j-1] == '^'){
+                        cout << s[j-1];
+                        j--;   s[j] = 0;
+                    }
+                    if((s[j-1] == '*') || (s[j-1] == '/')){
+                        cout << s[j-1];
+                        j--; s[j] = 0;
+                    }
+                    s[j] = input[i];
+                    j++;
+                }
+                i++;
+                break;
+            }
+            case '/':{
+                if(j == 0){
+                    s[j] = input[i];
+                    j++;
+                }
+                else{
+                    while(s[j-1] == '^'){
+                        cout << s[j-1];
+                        j--; s[j] = 0;
+                    }
+                    if((s[j-1] == '*') || (s[j-1] == '/')){
+                        cout << s[j-1];
+                        j--; s[j] = 0;
+                    }
+                    s[j] = input[i];
+                    j++;
+                }
+                i++;
+                break;
+            }
+            case '^':{
+                s[j] = input[i];
+                j++; i++;
+                break;
+            }
+            case '{':{
+                s[j] = input[i];
+                j++; i++;
+                break;
+            }
+            case '}':{
+                while(s[j-1] != '{'){
+                    cout << s[j-1];
+                    j--; s[j] = 0;
+                }
+                j--;
+                s[j] = 0;
+                cout << "'";
+                i++;
+                break;
+            }
+            case '=':{
+                s[j] = input[i];
+                j++; i++;
+                break;
+            }
+            case '(':{
+                s[j] = input[i];
+                j++; i++;
+                break;
+            }
+            case ')':{
+                while(s[j-1] != '('){
+                    cout << s[j-1];
+                    j--;  s[j] = 0;
+                }
+                j--;  s[j] = 0;   i++;
+                break;
+            }
+            case '.':{
+                x = 1;
+                while(j > 0){
+                    cout << s[j-1];
+                    j--;   s[j] = 0;
+                }
+                break;
+            }
+            default:{
+                cout << input[i];
+                i++;
+            }
+        }
+    }
+    return 0;
+}
